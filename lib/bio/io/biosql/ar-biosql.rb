@@ -167,7 +167,7 @@ module Bio
     end
     class SeqfeaturePath < DummyBase
       set_table_name "seqfeature_path"
-      set_primary_key :seqfeature_path_id"
+      set_primary_key :seqfeature_path_id
       set_sequence_name nil
       belongs_to :object_seqfeature, :class_name => "Seqfeature", :foreign_key => "object_seqfeature_id"
       belongs_to :subject_seqfeature, :class_name => "Seqfeature", :foreign_key => "subject_seqfeature_id"
