@@ -1,18 +1,22 @@
 module Bio
   class SQL
     class Biodatabase < DummyBase
+      set_table_name "biodatabase"
+      set_primary_key :biodatabase_id
       has_many :bioentries, :class_name =>"Bioentry", :foreign_key => "biodatabase_id"
       validates_uniqueness_of :name
     end
     class BioentryDbxref < DummyBase
       #delete				set_sequence_name nil
-      set_primary_key nil #bioentry_id,dbxref_id
+      set_table_name "bioentry_dbxref"
+      set_primary_key :bioentry_dbxref_id
       belongs_to :bioentry, :class_name => "Bioentry"
       belongs_to :dbxref, :class_name => "Dbxref"
     end
 
     class BioentryPath < DummyBase
-      set_primary_key nil
+      set_table_name "bioentry_path"
+      set_primary_key :bioentry_path_id
       #delete				set_sequence_name nil
       belongs_to :term, :class_name => "Term"
       #da sistemare per poter procedere.
@@ -22,12 +26,15 @@ module Bio
 
     class BioentryQualifierValue < DummyBase
       #NOTE: added rank to primary_keys, now it's finished.
+      set_table_name "bioentry_qualifier_value"
       set_primary_keys :bioentry_id, :term_id, :rank
       belongs_to :bioentry, :class_name => "Bioentry"
       belongs_to :term, :class_name => "Term"
     end #BioentryQualifierValue
   
     class Bioentry < DummyBase
+      set_table_name "bioentry"
+      set_primary_key :bioentry_id
       belongs_to :biodatabase, :class_name => "Biodatabase"
       belongs_to :taxon, :class_name => "Taxon"
       has_one :biosequence
@@ -55,36 +62,44 @@ module Bio
 				
     end
     class BioentryReference < DummyBase
-      set_primary_keys :bioentry_id, :reference_id, :rank
+      set_table_name "bioentry_reference"
+      set_primary_keys :bioentry_reference_id, :reference_id, :rank
       belongs_to :bioentry, :class_name => "Bioentry"
       belongs_to :reference , :class_name => "Reference"
     end
     class BioentryRelationship < DummyBase
-      #delete				set_primary_key "bioentry_relationship_id"
+      set_table_name "bioentry_relationship"
+      set_primary_key :bioentry_relationship_id
       set_sequence_name "bieontry_relationship_pk_seq"
       belongs_to :object_bioentry, :class_name => "Bioentry"
       belongs_to :subject_bioentry, :class_name => "Bioentry"
       belongs_to :term
     end
     class Biosequence < DummyBase
-      set_primary_keys :bioentry_id, :version
+      set_table_name "biosequence"
+      set_primary_keys :biosequence_id
       #delete				set_sequence_name "biosequence_pk_seq"
       belongs_to :bioentry, :foreign_key=>"bioentry_id"
       #has_one :bioentry
       #, :class_name => "Bioentry"
     end
     class Comment < DummyBase
+      set_table_name "comment"
+      set_primary_key :comment_id
       belongs_to :bioentry, :class_name => "Bioentry"
     end
     class DbxrefQualifierValue < DummyBase
       #think to use composite primary key
-      set_primary_key nil #dbxref_id, term_id, rank
+      set_table_name "dbxref_qualifier_value"
+      set_primary_key "dbxref_qualifier_value_id"
       #delete			      set_sequence_name nil
       belongs_to :dbxref, :class_name => "Dbxref"
       belongs_to :term, :class_name => "Term"
     end
     class Dbxref < DummyBase
       #set_sequence_name "dbxref_pk_seq"
+      set_table_name "dbxref"
+      set_primary_key :dbxref_id
       has_many :dbxref_qualifier_values, :class_name => "DbxrefQualifierValue"
       has_many :locations, :class_name => "Location"
       has_many :references, :class_name=>"Reference"
@@ -93,13 +108,16 @@ module Bio
       #TODO: check is with bioentry there is an has_and_belongs_to_many relationship has specified in schema overview.
     end
     class LocationQualifierValue <  DummyBase
-      set_primary_key nil #location_id, term_id
+      set_table_name "location_qualifier_value"
+      set_primary_key :location_qualifier_value_id
       #delete			      set_sequence_name nil
       belongs_to :location, :class_name => "Location"
       belongs_to :term, :class_name => "Term"
     end
     class Location < DummyBase
       #set_sequence_name "location_pk_seq"
+      set_table_name "location"
+      set_primary_key :location_id
       belongs_to :seqfeature, :class_name => "Seqfeature"
       belongs_to :dbxref, :class_name => "Dbxref"
       belongs_to :term, :class_name => "Term"
@@ -127,35 +145,44 @@ module Bio
       
     end
     class Ontology < DummyBase
+      set_table_name "ontology"
+      set_primary_key :ontology_id
       has_many :terms, :class_name => "Term"
       has_many :term_paths, :class_name => "TermPath"
       has_many :term_relationships, :class_name => "TermRelationship"
     end
     class Reference < DummyBase
+      set_table_name "reference"
+      set_primary_key :reference_id
       belongs_to :dbxref, :class_name => "Dbxref"
       has_many :bioentry_references, :class_name=>"BioentryReference"
       has_many :bioentries, :through=>:bioentry_references
     end
     class SeqfeatureDbxref < DummyBase
-      set_primary_keys :seqfeature_id, :dbxref_id
+      set_table_name "seqfeature_dbxref"
+      set_primary_key :seqfeature_dbxref_id
       #delete		      set_sequence_name nil
       belongs_to :seqfeature, :class_name => "Seqfeature", :foreign_key => "seqfeature_id"
       belongs_to :dbxref, :class_name => "Dbxref", :foreign_key => "dbxref_id"
     end
     class SeqfeaturePath < DummyBase
-      set_primary_keys :object_seqfeature_id, :subject_seqfeature_id, :term_id
+      set_table_name "seqfeature_path"
+      set_primary_key :seqfeature_path_id"
       set_sequence_name nil
       belongs_to :object_seqfeature, :class_name => "Seqfeature", :foreign_key => "object_seqfeature_id"
       belongs_to :subject_seqfeature, :class_name => "Seqfeature", :foreign_key => "subject_seqfeature_id"
       belongs_to :term, :class_name => "Term"
     end
     class SeqfeatureQualifierValue < DummyBase
-      set_primary_keys  :seqfeature_id, :term_id, :rank
+      set_table_name "seqfeature_qualifier_value"
+      set_primary_keys  :seqfeature_qualifier_value_id, :term_id, :rank
       set_sequence_name nil
       belongs_to :seqfeature
       belongs_to :term, :class_name => "Term"
     end		
-    class Seqfeature <DummyBase  
+    class Seqfeature < DummyBase
+      set_table_name "seqfeature"
+      set_primary_key :seqfeature_id  
       set_sequence_name "seqfeature_pk_seq"
       belongs_to :bioentry
       #, :class_name => "Bioentry"
@@ -182,17 +209,22 @@ module Bio
         self.sequence.translate(*args)
       end
     end
-    class SeqfeatureRelationship <DummyBase
+    class SeqfeatureRelationship < DummyBase
+      set_table_name "seqfeature_relationship"
+      set_primary_key :seqfeature_relationship_id
       set_sequence_name "seqfeatue_relationship_pk_seq"
       belongs_to :term, :class_name => "Term"
       belongs_to :object_seqfeature, :class_name => "Seqfeature"
       belongs_to :subject_seqfeature, :class_name => "Seqfeature"
     end
     class TaxonName < DummyBase
-      set_primary_keys :taxon_id, :name, :name_class
+      set_table_name "taxon_name"
+      set_primary_keys :taxon_name_id, :name, :name_class
       belongs_to :taxon, :class_name => "Taxon"
     end
     class Taxon < DummyBase
+      set_table_name "Taxon"
+      set_primary_key :taxon_id
       set_sequence_name "taxon_pk_seq"
       has_many :taxon_names, :class_name => "TaxonName"
       has_one :taxon_scientific_name, :class_name => "TaxonName", :conditions=>"name_class = 'scientific name'"
@@ -200,12 +232,15 @@ module Bio
       has_one :bioentry, :class_name => "Bioentry"
     end
     class TermDbxref < DummyBase
-      set_primary_key nil #term_id, dbxref_id
+      set_table_name "term_dbxref"
+      set_primary_key :term_dbxref_id
       #delete			      set_sequence_name nil
       belongs_to :term, :class_name => "Term"
       belongs_to :dbxref, :class_name => "Dbxref"
     end
     class TermPath < DummyBase
+      set_table_name "term_path"
+      set_primary_key :term_path_id
       set_sequence_name "term_path_pk_seq"
       belongs_to :ontology, :class_name => "Ontology"
       belongs_to :subject_term, :class_name => "Term"
@@ -213,6 +248,8 @@ module Bio
       belongs_to :predicate_term, :class_name => "Term"
     end
     class Term < DummyBase
+      set_table_name "term"
+      set_primary_key :term_id
       belongs_to :ontology, :class_name => "Ontology"
       has_many :seqfeature_qualifier_values, :class_name => "SeqfeatureQualifierValue"
       has_many :dbxref_qualifier_values, :class_name => "DbxrefQualifierValue"
@@ -235,6 +272,8 @@ module Bio
       has_many :seqfeature_paths, :class_name => "SeqfeaturePath"
     end
     class TermRelationship < DummyBase
+      set_table_name "term_relationship"
+      set_primary_key :term_relationship_id
       set_sequence_name "term_relationship_pk_seq"
       belongs_to :ontology, :class_name => "Ontology"
       belongs_to :subject_term, :class_name => "Term"
@@ -243,14 +282,16 @@ module Bio
       has_one :term_relationship_term, :class_name => "TermRelationshipTerm"
     end
     class TermRelationshipTerm < DummyBase
+      set_table_name "term_relationship_term"
       #delete			      set_sequence_name nil
-      set_primary_key :term_relationship_id
+      set_primary_key :term_relationship_term_id
       belongs_to :term_relationship, :class_name => "TermRelationship"
       belongs_to :term, :class_name => "Term"
     end
     class TermSynonym < DummyBase
+      set_table_name "term_synonym"
       #delete			      set_sequence_name nil
-      set_primary_key nil
+      set_primary_key :term_synonym_id
       belongs_to :term, :class_name => "Term"
     end
   end #SQL
