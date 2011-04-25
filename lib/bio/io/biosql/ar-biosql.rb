@@ -231,6 +231,14 @@ module Bio
       has_one :taxon_genbank_common_name, :class_name => "TaxonName", :conditions=>"name_class = 'genbank common name'"
       has_one :bioentry, :class_name => "Bioentry"
       
+      def ancestors
+        if(self.left_value && self.right_value)
+          Taxon.find(:all, :conditions => "#{self.left_value} BETWEEN left_value AND right_value", :order => :left_value)
+        else
+          return []
+        end
+      end
+      
       def species
         return self if node_rank =='species'
         ancestors.each do |t|
@@ -240,6 +248,7 @@ module Bio
         end
         return nil
       end
+      
     end
     class TermDbxref < DummyBase
       set_table_name "term_dbxref"
